@@ -21,6 +21,7 @@
     var PROP_PARAM_NB_RESULTS_DEFAULT = "suggestPOI.param.nbResults.default";
     var PROP_PARAM_CLIENT_ID = "suggestPOI.param.clientId";
     var PROP_PARAM_STOREADRFILTER_DEFAULT = "suggestPOI.param.storeadrfilter.default";
+    var PROP_PARAM_STOREPOITYPES_DEFAULT =  "suggestPOI.param.types.default";
     
     var EVT_NS_SPOI = ".suggestPOI";
     var EVT_SELECT = "select"
@@ -29,9 +30,10 @@
     var DATATYPE_JSON = "json";
     var DATATYPE_JSONP = "jsonp";
 
-    var APIINPUT_SUGGESTPOI = "SUGGESTPOI";
     var APIINPUT_BAN = "BAN";
+    var APIINPUT_SUGGESTPOI = "SUGGESTPOI";
     var APIINPUT_STOREADR = "STOREADR";
+    var APIINPUT_STOREADR = "STOREPOI";
 
     var STOREADR_DEFAULT_FILTER = "France";
     
@@ -65,6 +67,7 @@
                 banpostcode: $config[PROP_PARAM_BANPOSTCODE_DEFAULT],
                 bancitycode: $config[PROP_PARAM_BANCITYCODE_DEFAULT],
                 storeadrfilter: $config[PROP_PARAM_STOREADRFILTER_DEFAULT],
+                storepoitypes: $config[PROP_PARAM_STOREPOITYPES_DEFAULT],
                 nbResults: $config[PROP_PARAM_NB_RESULTS_DEFAULT]
             };
             
@@ -104,7 +107,7 @@
         var banlon = options.banlon;
         var banpostcode = options.banpostcode;
         var bancitycode = options.bancitycode;
-
+        var storepoitypes = options.storepoitypes;
         var storeadrfilter = options.storeadrfilter || STOREADR_DEFAULT_FILTER;
         
         if ($.isArray(types)) {
@@ -138,6 +141,9 @@
                 } else if ($config[PROP_API_INPUT] == APIINPUT_STOREADR) {
                     ajax_url = $config[PROP_WS_URL] + "/" + $config[PROP_PARAM_CLIENT_ID] + "/" + storeadrfilter + "/adrauto/" + input.term;
                     ajax_data = null;
+                } else if ($config[PROP_API_INPUT] == APIINPUT_STOREPOI) {
+                    ajax_url = $config[PROP_WS_URL] + "/" + $config[PROP_PARAM_CLIENT_ID] + "/poiauto/" + input.term;
+                    ajax_data = null;
                 } else {
                     ajax_url = $config[PROP_WS_URL]
 	                ajax_data = {
@@ -152,7 +158,9 @@
 	              
 	                url: ajax_url,
 	                dataType: $config[PROP_DATATYPE] || DATATYPE_JSONP,
-	                
+	                headers: {
+	                    "Entites": storepoitypes
+	                }
 	                data: ajax_data,
 	                
 	                success: function(data) {
