@@ -22,6 +22,7 @@
     var PROP_PARAM_CLIENT_ID = "suggestPOI.param.clientId";
     var PROP_PARAM_STOREADRFILTER_DEFAULT = "suggestPOI.param.storeadrfilter.default";
     var PROP_PARAM_STOREPOITYPES_DEFAULT =  "suggestPOI.param.types.default";
+    var PROP_PARAM_PROJECTIONCODE_DEFAULT = "suggestPOI.param.projection";
     
     var EVT_NS_SPOI = ".suggestPOI";
     var EVT_SELECT = "select"
@@ -68,6 +69,7 @@
                 bancitycode: $config[PROP_PARAM_BANCITYCODE_DEFAULT],
                 storeadrfilter: $config[PROP_PARAM_STOREADRFILTER_DEFAULT],
                 storepoitypes: $config[PROP_PARAM_STOREPOITYPES_DEFAULT],
+                projectioncode: $config[PROP_PARAM_PROJECTIONCODE_DEFAULT],
                 nbResults: $config[PROP_PARAM_NB_RESULTS_DEFAULT]
             };
             
@@ -108,6 +110,7 @@
         var banpostcode = options.banpostcode;
         var bancitycode = options.bancitycode;
         var storepoitypes = options.storepoitypes;
+        var projectioncode = options.projectioncode;
         var storeadrfilter = options.storeadrfilter || STOREADR_DEFAULT_FILTER;
         
         if ($.isArray(types)) {
@@ -142,7 +145,7 @@
                     ajax_url = $config[PROP_WS_URL] + "/" + $config[PROP_PARAM_CLIENT_ID] + "/" + storeadrfilter + "/adrauto/" + input.term;
                     ajax_data = null;
                 } else if ($config[PROP_API_INPUT] == APIINPUT_STOREPOI) {
-                    ajax_url = $config[PROP_WS_URL] + "/" + $config[PROP_PARAM_CLIENT_ID] + "/poiauto/" + input.term;
+                    ajax_url = $config[PROP_WS_URL] + "/" + $config[PROP_PARAM_CLIENT_ID] + "/poiauto/" + input.term + "?Parms={\"Entites\" : \"" + storepoitypes + "\", \"toSrid\" :\""+projectioncode+"\"}";
                     ajax_data = null;
                 } else {
                     ajax_url = $config[PROP_WS_URL]
@@ -158,9 +161,6 @@
 	              
 	                url: ajax_url,
 	                dataType: $config[PROP_DATATYPE] || DATATYPE_JSONP,
-	                headers: {
-	                    "Entites": storepoitypes
-	                }
 	                data: ajax_data,
 	                
 	                success: function(data) {
